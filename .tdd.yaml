@@ -1,0 +1,7 @@
+aliases:
+  all:
+    command: npm t
+    git:
+      amend: true
+      add: "*"
+    timer: 60
