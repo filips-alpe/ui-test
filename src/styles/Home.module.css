@@ -94,8 +94,17 @@
 
 .textLink {
   color: rgb(124, 58, 237);
-  background: linear-gradient(to right, rgba(231, 216, 246, 1), rgba(231, 216, 246, 1)),
-    linear-gradient(to right, rgba(99, 1, 235, 1), rgba(124, 58, 237, 1), rgba(231, 216, 246, 1));
+  background: linear-gradient(
+      to right,
+      rgba(231, 216, 246, 1),
+      rgba(231, 216, 246, 1)
+    ),
+    linear-gradient(
+      to right,
+      rgba(99, 1, 235, 1),
+      rgba(124, 58, 237, 1),
+      rgba(231, 216, 246, 1)
+    );
   background-size: 100% 1px, 0 1px;
   background-position: 100% 100%, 0 100%;
   background-repeat: no-repeat;

@@ -1,6 +1,6 @@
-import Layout from "src/core/layouts/Layout"
-import { BlitzPage } from "@blitzjs/next"
-import styles from "src/styles/Home.module.css"
+import Layout from "src/core/layouts/Layout";
+import { BlitzPage } from "@blitzjs/next";
+import styles from "src/styles/Home.module.css";
 
 /*
  * This file is just for a pleasant getting started page for your new app.
@@ -97,7 +97,7 @@ const Home: BlitzPage = () => {
         </footer>
       </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

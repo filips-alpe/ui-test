@@ -1,5 +1,5 @@
-import { setupBlitzClient } from "@blitzjs/next"
+import { setupBlitzClient } from "@blitzjs/next";
 
 export const { withBlitz } = setupBlitzClient({
   plugins: [],
-})
+});
