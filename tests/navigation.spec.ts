@@ -28,6 +28,7 @@ const machineDefinition = {
 async function listPageTest({ page }: TestContext) {
   expect(await page.title()).toEqual("Device list");
   await testPageHeader({ page });
+  await expect(await page.locator("table")).toBeVisible();
 }
 (machineDefinition.states.list as any).meta = { test: listPageTest };
 

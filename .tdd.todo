@@ -1,4 +1,3 @@
-Show a list of devices
 Show actual devices (get from https://static.ui.com/fingerprint/ui/public.json)
 Fail gracefully when API is down
 Fail gracefully when API has changed
