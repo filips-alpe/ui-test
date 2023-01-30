@@ -27,14 +27,24 @@ const machineDefinition = {
 
 async function listPageTest({ page }: TestContext) {
   expect(await page.title()).toEqual("Device list");
+  await testPageHeader({ page });
 }
 (machineDefinition.states.list as any).meta = { test: listPageTest };
 
 async function detailPageTest({ page }: TestContext) {
   expect(page.url()).toMatch(/\/device\//);
   expect(await page.title()).toEqual("Device details");
+  await testPageHeader({ page });
 }
 (machineDefinition.states.detail as any).meta = { test: detailPageTest };
+
+async function testPageHeader({ page }: TestContext) {
+  await expect(await page.locator("header")).toContainText("Devices");
+  await expect(await page.locator("header")).toContainText(
+    "Author/Filips Alpe",
+  );
+  await expect(await page.locator("header svg")).toBeVisible();
+}
 
 const machine = createMachine(machineDefinition);
 

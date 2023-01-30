@@ -1,5 +1,6 @@
 import { BlitzPage } from "@blitzjs/next";
 import Head from "next/head";
+import { Header } from "src/components/Header";
 
 const Home: BlitzPage = () => {
   return (
@@ -7,6 +8,7 @@ const Home: BlitzPage = () => {
       <Head>
         <title>Device list</title>
       </Head>
+      <Header />
     </main>
   );
 };
