@@ -6,6 +6,7 @@ import {
 } from "@blitzjs/next";
 import React from "react";
 import { withBlitz } from "src/blitz-client";
+import "../styles/globals.css";
 
 function RootErrorFallback({ error }: ErrorFallbackProps) {
   return (
