@@ -26,13 +26,13 @@ const machineDefinition = {
 };
 
 async function listPageTest({ page }: TestContext) {
-  await expect(await page.getByText("list page")).toBeVisible();
+  expect(await page.title()).toEqual("Device list");
 }
 (machineDefinition.states.list as any).meta = { test: listPageTest };
 
 async function detailPageTest({ page }: TestContext) {
   expect(page.url()).toMatch(/\/device\//);
-  await expect(await page.getByText("device page")).toBeVisible();
+  expect(await page.title()).toEqual("Device details");
 }
 (machineDefinition.states.detail as any).meta = { test: detailPageTest };
 

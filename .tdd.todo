@@ -1,0 +1,5 @@
+Show a list of devices
+Show actual devices (get from https://static.ui.com/fingerprint/ui/public.json)
+Fail gracefully when API is down
+Fail gracefully when API has changed
+Show device images (example: https://static.ui.com/fingerprint/ui/icons/06a25b40-ef1f-463a-82d9-13236866ea3d_257x257.png)
