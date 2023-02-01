@@ -1,7 +1,6 @@
 Fail gracefully when API is down
 Fail gracefully when API has changed
 Add active/hover states for header logo
-Add search
 Add filtering
 Add grid view
 Construct image url from only available resolutions (remove DEFAULT_IMAGE_RESOLUTION)

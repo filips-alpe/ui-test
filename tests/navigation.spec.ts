@@ -1,6 +1,6 @@
 import { test, expect, Page } from "@playwright/test";
 import { createModel } from "@xstate/test";
-import { createMachine, EventObject } from "xstate";
+import { assign, createMachine, EventObject } from "xstate";
 
 interface TestContext {
   page: Page;
@@ -9,18 +9,29 @@ interface TestContext {
 const machineDefinition = {
   id: "navigation",
   initial: "list",
-  context: {},
+  context: {
+    searchValue: "",
+  },
   states: {
     list: {
       on: {
         OPEN_DETAILS: "detail",
+        SEARCH: {
+          actions: "setSearchValue",
+        },
       },
     },
-    detail: {},
+    detail: {
+      entry: "clearSearchValue",
+    },
   },
   schema: {
-    context: {} as {},
-    events: {} as { type: "OPEN_DETAILS"; id: string },
+    context: {} as {
+      searchValue: string;
+    },
+    events: {} as
+      | { type: "OPEN_DETAILS"; id: string }
+      | { type: "SEARCH"; value: string },
   },
   predictableActionArguments: true,
 };
@@ -31,7 +42,15 @@ async function listPageTest({ page }: TestContext) {
   await expect(await page.locator("table")).toBeVisible();
   await expect(await page.locator("tr img").first()).toBeVisible();
 
-  await expect(await page.locator("tbody tr").count()).toBeGreaterThan(2);
+  const numOfResults = parseInt(
+    (
+      (await page.getByTestId("num-of-results").first().textContent()) || ""
+    ).replace(/\D/g, ""),
+    10,
+  );
+  await expect(await page.locator("tbody tr").count()).toBe(
+    Math.min(numOfResults, 15),
+  );
 }
 (machineDefinition.states.list as any).meta = { test: listPageTest };
 
@@ -50,13 +69,39 @@ async function testPageHeader({ page }: TestContext) {
   await expect(await page.locator("header svg")).toBeVisible();
 }
 
-const machine = createMachine(machineDefinition);
+const machine = createMachine(machineDefinition, {
+  actions: {
+    setSearchValue: assign((ctx, event) => ({
+      searchValue: (event as { value: string }).value,
+    })),
+    clearSearchValue: assign({
+      searchValue: "",
+    }),
+  },
+});
 
 const model = createModel<TestContext>(machine).withEvents({
   OPEN_DETAILS: {
     exec: async ({ page }, e: EventObject & { id: string }) =>
       page.goto(`/device/${e.id}`),
     cases: [{ id: "foo" }, { id: "bar" }],
+  },
+  SEARCH: {
+    exec: async (
+      { page },
+      e: EventObject & { value: string; matchingDevices: number },
+    ) => {
+      await page.locator("input[type=search]").fill(e.value);
+      await expect(
+        await page.getByText(`${e.matchingDevices} devices`),
+      ).toBeVisible();
+    },
+    cases: [
+      { value: "conf", matchingDevices: 1 },
+      { value: "g4", matchingDevices: 7 },
+      { value: "0", matchingDevices: 62 },
+      { value: "", matchingDevices: 432 },
+    ],
   },
 });
 

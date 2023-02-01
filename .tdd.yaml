@@ -4,4 +4,4 @@ aliases:
     git:
       amend: true
       add: "*"
-    timer: 60
+    timer: 120
