@@ -1,9 +1,25 @@
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+const DEVICE_LIST_URL = "https://static.ui.com/fingerprint/ui/public.json";
+const DEFAULT_IMAGE_RESOLUTION = "257x257";
+
+interface Device {
+  id: string;
+  line: {
+    name: string;
+  };
+  product: {
+    name: string;
+  };
+  icon: {
+    id: string;
+    resolutions: [number, number][];
+  };
+}
 
 export function DeviceList() {
-  const devices = [
-    { id: "06a25b40-ef1f-463a-82d9-13236866ea3d", line: "bar", name: "Baz" },
-  ];
+  const devices = useDevices();
 
   return (
     <table
@@ -49,7 +65,7 @@ export function DeviceList() {
         </tr>
       </thead>
       <tbody>
-        {devices.map((device) => (
+        {devices.slice(0, 15).map((device) => (
           <tr
             key={device.id}
             style={{
@@ -64,8 +80,8 @@ export function DeviceList() {
               }}
             >
               <Image
-                src={`https://static.ui.com/fingerprint/ui/icons/${device.id}_257x257.png`}
-                alt={`${device.name} image`}
+                src={`https://static.ui.com/fingerprint/ui/icons/${device.icon.id}_${DEFAULT_IMAGE_RESOLUTION}.png`}
+                alt={`${device.product.name} image`}
                 width={24}
                 height={24}
                 style={{
@@ -73,11 +89,27 @@ export function DeviceList() {
                 }}
               />
             </td>
-            <td>{device.line}</td>
-            <td>{device.name}</td>
+            <td>{device.line.name}</td>
+            <td>{device.product.name}</td>
           </tr>
         ))}
       </tbody>
     </table>
   );
 }
+
+const useDevices = () => {
+  const [devices, setDevices] = useState<Device[]>([]);
+  useEffect(() => {
+    const fetchDevices = async () => {
+      const response = await fetch(DEVICE_LIST_URL);
+      const data = await response.json();
+      setDevices(data.devices);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchDevices();
+  }, []);
+
+  return devices;
+};
