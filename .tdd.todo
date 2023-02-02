@@ -3,6 +3,7 @@ Fail gracefully when API has changed
 Add active/hover states for header logo
 Add grid view
 Construct image url from only available resolutions (remove DEFAULT_IMAGE_RESOLUTION)
-Add button to clear search
 Use fake data in tests
 Test filters in combination with search
+Style filter toolbar
+Add search icon to searchbox

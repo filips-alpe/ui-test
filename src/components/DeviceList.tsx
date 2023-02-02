@@ -37,7 +37,25 @@ export function DeviceList() {
 
   return (
     <>
-      <input type="search" placeholder="Search" onChange={applySearch} />
+      <input
+        type="search"
+        placeholder="Search"
+        onChange={applySearch}
+        style={{
+          background: "#F6F6F8",
+          border: "none",
+          outline: "none",
+          borderRadius: "4px",
+          margin: "8px 0 8px 30px",
+          padding: "5px 10px",
+        }}
+      />
+      <div
+        style={{
+          borderTop: "1px solid #EDEDF0",
+          marginBottom: "20px",
+        }}
+      />
       <fieldset
         style={{
           position: "absolute",
@@ -45,6 +63,8 @@ export function DeviceList() {
           width: "200px",
           fontSize: "14px",
           lineHeight: "24px",
+          background: "#fff",
+          boxShadow: "0px 12px 48px rgba(0, 0, 0, 0.15)",
         }}
       >
         <div>
@@ -77,12 +97,14 @@ export function DeviceList() {
           lineHeight: "24px",
           color: "rgba(0, 0, 0, 0.65)",
           borderCollapse: "collapse",
+          marginLeft: "9vw",
         }}
       >
         <thead>
           <tr>
             <th
               style={{
+                width: "140px",
                 textAlign: "right",
                 paddingRight: "40px",
                 color: "#BDBDBD",
