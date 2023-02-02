@@ -11,6 +11,7 @@ const machineDefinition = {
   initial: "list",
   context: {
     searchValue: "",
+    productLines: [],
   },
   states: {
     list: {
@@ -19,19 +20,24 @@ const machineDefinition = {
         SEARCH: {
           actions: "setSearchValue",
         },
+        FILTER: {
+          actions: "setFilter",
+        },
       },
     },
     detail: {
-      entry: "clearSearchValue",
+      entry: ["clearSearchValue", "clearFilter"],
     },
   },
   schema: {
     context: {} as {
       searchValue: string;
+      productLines: string[];
     },
     events: {} as
       | { type: "OPEN_DETAILS"; id: string }
-      | { type: "SEARCH"; value: string },
+      | { type: "SEARCH"; value: string }
+      | { type: "FILTER"; productLines: string[] },
   },
   predictableActionArguments: true,
 };
@@ -77,6 +83,12 @@ const machine = createMachine(machineDefinition, {
     clearSearchValue: assign({
       searchValue: "",
     }),
+    setFilter: assign((ctx, event) => ({
+      productLines: (event as { productLines: string[] }).productLines,
+    })),
+    clearFilter: assign({
+      productLines: [] as string[],
+    }),
   },
 });
 
@@ -101,6 +113,25 @@ const model = createModel<TestContext>(machine).withEvents({
       { value: "g4", matchingDevices: 7 },
       { value: "0", matchingDevices: 62 },
       { value: "", matchingDevices: 432 },
+    ],
+  },
+  FILTER: {
+    exec: async (
+      { page },
+      e: EventObject & { productLines: string[]; matchingDevices: number },
+    ) => {
+      await page.locator("input[type=search]").clear();
+      for (const p of e.productLines) {
+        await page.locator(`input[type=checkbox][value="${p}"]`).check();
+      }
+      await expect(
+        await page.getByText(`${e.matchingDevices} devices`),
+      ).toBeVisible();
+    },
+    cases: [
+      { productLines: ["UniFi"], matchingDevices: 116 },
+      { productLines: ["airMAX", "UniFi Protect"], matchingDevices: 157 },
+      { productLines: [], matchingDevices: 432 },
     ],
   },
 });

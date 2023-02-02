@@ -1,40 +1,75 @@
 import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
+import { Device } from "src/types";
+import { matchesFilters, matchesSearch } from "src/utils";
 
 const DEVICE_LIST_URL = "https://static.ui.com/fingerprint/ui/public.json";
 const DEFAULT_IMAGE_RESOLUTION = "257x257";
 
-interface Device {
-  id: string;
-  line: {
-    name: string;
-  };
-  product: {
-    name: string;
-  };
-  icon: {
-    id: string;
-    resolutions: [number, number][];
-  };
-}
-
 export function DeviceList() {
   const devices = useDevices();
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterProductLines, setFilterProductLines] = useState<string[]>([]);
 
   function applySearch(e: ChangeEvent<HTMLInputElement>) {
     setSearchQuery(e.target.value);
   }
 
+  function applyFilter() {
+    const filterValues: string[] = [];
+    document
+      .querySelectorAll("[name=productLines]:checked")
+      .forEach((input: HTMLInputElement) => {
+        filterValues.push(input.value);
+      });
+    setFilterProductLines(filterValues);
+  }
+
   const devicesToShow = devices.filter(
     (device) =>
-      device.line.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      device.product.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      matchesFilters(device, filterProductLines) &&
+      matchesSearch(device, searchQuery),
   );
+
+  const productLines = Array.from(
+    new Set(devices.map((d) => d.line.name)),
+  ).sort();
 
   return (
     <>
       <input type="search" placeholder="Search" onChange={applySearch} />
+      <fieldset
+        style={{
+          position: "absolute",
+          right: 0,
+          width: "200px",
+          fontSize: "14px",
+          lineHeight: "24px",
+        }}
+      >
+        <div>
+          <legend
+            style={{
+              fontWeight: 700,
+            }}
+          >
+            Product line
+          </legend>
+          {productLines.map((line, i) => (
+            <>
+              <input
+                key={i}
+                type="checkbox"
+                name="productLines"
+                onChange={applyFilter}
+                value={line}
+              />
+              {line}
+              <br />
+            </>
+          ))}
+        </div>
+      </fieldset>
       <table
         style={{
           width: "100%",

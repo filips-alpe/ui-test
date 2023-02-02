@@ -41,6 +41,7 @@ const config: PlaywrightTestConfig = {
     trace: "on-first-retry",
     headless: process.env.CI ? true : false,
     // testIdAttribute: "data-testid",
+    screenshot: "only-on-failure",
   },
 
   /* Configure projects for major browsers */
