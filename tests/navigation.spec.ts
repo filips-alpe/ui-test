@@ -130,8 +130,8 @@ const model = createModel<TestContext>(machine).withEvents({
     },
     cases: [
       { productLines: ["UniFi"], matchingDevices: 116 },
-      { productLines: ["airMAX", "UniFi Protect"], matchingDevices: 157 },
-      { productLines: [], matchingDevices: 432 },
+      { productLines: ["airMAX", "UniFi Protect"], matchingDevices: 158 },
+      { productLines: [], matchingDevices: 440 },
     ],
   },
 });
